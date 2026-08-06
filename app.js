@@ -284,3 +284,90 @@ function escapeHtml(value) {
     .replace(/"/g, '&quot;')
     .replace(/'/g, '&#039;');
 }
+// ===========================
+// SEARCH ATTENDEE
+// ===========================
+
+const searchButton = document.getElementById('searchButton');
+const searchBox = document.getElementById('searchBox');
+const searchResults = document.getElementById('searchResults');
+
+if (searchButton) {
+  searchButton.addEventListener('click', searchAttendee);
+}
+
+if (searchBox) {
+  searchBox.addEventListener('keypress', function (e) {
+    if (e.key === 'Enter') {
+      searchAttendee();
+    }
+  });
+}
+
+async function searchAttendee() {
+
+  const query = searchBox.value.trim();
+
+  if (!query) {
+    return;
+  }
+
+  searchResults.innerHTML = "Searching...";
+
+  try {
+
+    const response = await fetch(
+      API_URL +
+      "?action=search&query=" +
+      encodeURIComponent(query),
+      {
+        cache: "no-store"
+      }
+    );
+
+    const data = await response.json();
+
+    if (!data.results || data.results.length === 0) {
+
+      searchResults.innerHTML =
+        "<p>No attendee found.</p>";
+
+      return;
+    }
+
+    let html = "";
+
+    data.results.forEach(person => {
+
+      html += `
+      <div class="search-card">
+
+        <strong>${person.attendeeName}</strong><br>
+
+        Ticket :
+        ${person.ticketId}<br>
+
+        Main Registrant :
+        ${person.mainRegistrant}<br>
+
+        Status :
+        ${person.checkedIn ? "✅ Checked In" : "❌ Not Checked In"}
+
+      </div>
+      <br>
+      `;
+
+    });
+
+    searchResults.innerHTML = html;
+
+  }
+
+  catch(error){
+
+    searchResults.innerHTML =
+      "Unable to search.";
+
+  }
+
+}
