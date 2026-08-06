@@ -6,33 +6,41 @@
     name="viewport"
     content="width=device-width, initial-scale=1, viewport-fit=cover"
   >
-
-  <title>Garden Party Check-in</title>
-
+  <title>Event Check-in</title>
   <link rel="stylesheet" href="style.css">
-
   <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
 </head>
-
 <body>
   <main class="page">
 
     <section class="card">
-      <h1>Garden Party Check-in</h1>
+      <h1>Get Together Party Check-in</h1>
       <p class="subtitle">
-        Scan each attendee’s QR code using the live camera.
+        Live QR scanning, dashboard, and attendee search.
       </p>
 
-      <label for="operator">
-        Volunteer name
-      </label>
-
+      <label for="operator">Volunteer name</label>
       <input
         id="operator"
         type="text"
         placeholder="Enter your name"
         autocomplete="name"
       >
+    </section>
+
+    <section class="dashboard" aria-label="Check-in dashboard">
+      <div class="metric">
+        <strong id="total">–</strong>
+        <span>Registered</span>
+      </div>
+      <div class="metric">
+        <strong id="checked">–</strong>
+        <span>Checked in</span>
+      </div>
+      <div class="metric">
+        <strong id="remaining">–</strong>
+        <span>Remaining</span>
+      </div>
     </section>
 
     <section class="card">
@@ -61,8 +69,27 @@
       <div id="ticketDetails"></div>
     </section>
 
+    <section class="card">
+      <h2>Search attendee</h2>
+
+      <div class="search-controls">
+        <input
+          id="searchInput"
+          type="search"
+          placeholder="Name, ticket ID, main registrant, or email"
+        >
+        <button id="searchButton" type="button">
+          Search
+        </button>
+      </div>
+
+      <p id="searchMessage" class="small"></p>
+      <div id="searchResults"></div>
+    </section>
+
   </main>
 
   <script src="app.js"></script>
 </body>
 </html>
+
