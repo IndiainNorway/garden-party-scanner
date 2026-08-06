@@ -1,5 +1,6 @@
 const API_URL =
   'https://script.google.com/macros/s/AKfycby79TDbtVLGWt3BnhdlEPvhBi5QWvdZ6Dh8kZuYQRfh4K1bIxlhHQAeUpAJlok6Z2zkFQ/exec';
+
 const operatorInput = document.getElementById('operator');
 const startButton = document.getElementById('startButton');
 const stopButton = document.getElementById('stopButton');
@@ -163,15 +164,18 @@ async function onScanSuccess(decodedText) {
   }
 
   try {
-    const body = new URLSearchParams({
+    const params = new URLSearchParams({
       ticket: ticketId,
       operator: operator
     });
 
-    const response = await fetch(API_URL, {
-      method: 'POST',
-      body: body,
-      redirect: 'follow'
+    const requestUrl =
+      API_URL + '?' + params.toString();
+
+    const response = await fetch(requestUrl, {
+      method: 'GET',
+      redirect: 'follow',
+      cache: 'no-store'
     });
 
     if (!response.ok) {
