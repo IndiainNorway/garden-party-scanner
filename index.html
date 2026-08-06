@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1, viewport-fit=cover"
+  >
+
+  <title>Garden Party Check-in</title>
+
+  <link rel="stylesheet" href="style.css">
+
+  <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
+</head>
+
+<body>
+  <main class="page">
+
+    <section class="card">
+      <h1>Garden Party Check-in</h1>
+      <p class="subtitle">
+        Scan each attendee’s QR code using the live camera.
+      </p>
+
+      <label for="operator">
+        Volunteer name
+      </label>
+
+      <input
+        id="operator"
+        type="text"
+        placeholder="Enter your name"
+        autocomplete="name"
+      >
+    </section>
+
+    <section class="card">
+      <button id="startButton" type="button">
+        Start live scanner
+      </button>
+
+      <button
+        id="stopButton"
+        class="danger hidden"
+        type="button"
+      >
+        Stop scanner
+      </button>
+
+      <div id="reader"></div>
+
+      <p id="cameraMessage" class="small">
+        Allow camera access when prompted.
+      </p>
+    </section>
+
+    <section id="result" class="card result hidden">
+      <div id="resultTitle"></div>
+      <div id="attendeeName"></div>
+      <div id="ticketDetails"></div>
+    </section>
+
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>
