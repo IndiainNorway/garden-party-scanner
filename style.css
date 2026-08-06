@@ -10,7 +10,7 @@ body {
 }
 
 .page {
-  max-width: 620px;
+  max-width: 680px;
   margin: 0 auto;
   padding: 18px;
 }
@@ -23,10 +23,19 @@ body {
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
 }
 
+h1,
+h2 {
+  color: #17365d;
+}
+
 h1 {
   margin: 0 0 6px;
-  color: #17365d;
   font-size: 26px;
+}
+
+h2 {
+  margin: 0 0 14px;
+  font-size: 21px;
 }
 
 .subtitle {
@@ -50,12 +59,13 @@ button {
 
 input {
   border: 1px solid #cbd5e1;
+  background: #ffffff;
 }
 
 button {
   border: 0;
   background: #17365d;
-  color: white;
+  color: #ffffff;
   font-weight: bold;
   cursor: pointer;
 }
@@ -68,6 +78,41 @@ button:disabled {
 button.danger {
   margin-top: 10px;
   background: #8b1e1e;
+}
+
+button.secondary {
+  width: auto;
+  margin-top: 10px;
+  padding: 9px 14px;
+  background: #236b35;
+}
+
+.dashboard {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 9px;
+  margin-bottom: 14px;
+}
+
+.metric {
+  background: #eef4fb;
+  border-radius: 12px;
+  padding: 14px 8px;
+  text-align: center;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.metric strong {
+  display: block;
+  color: #17365d;
+  font-size: 27px;
+}
+
+.metric span {
+  display: block;
+  margin-top: 4px;
+  color: #4b5563;
+  font-size: 13px;
 }
 
 #reader {
@@ -124,4 +169,68 @@ button.danger {
 #ticketDetails {
   line-height: 1.5;
   overflow-wrap: anywhere;
+}
+
+.search-controls {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 8px;
+}
+
+.search-controls button {
+  width: auto;
+  min-width: 100px;
+}
+
+.search-row {
+  margin-top: 12px;
+  padding: 14px 0;
+  border-top: 1px solid #e5e7eb;
+}
+
+.search-name {
+  font-size: 18px;
+  font-weight: bold;
+  color: #17365d;
+}
+
+.search-meta {
+  margin-top: 4px;
+  color: #6b7280;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.status-good {
+  margin-top: 7px;
+  color: #166534;
+  font-weight: bold;
+}
+
+.status-waiting {
+  margin-top: 7px;
+  color: #7a5b00;
+  font-weight: bold;
+}
+
+@media (max-width: 480px) {
+  .page {
+    padding: 12px;
+  }
+
+  .card {
+    padding: 15px;
+  }
+
+  .metric strong {
+    font-size: 23px;
+  }
+
+  .search-controls {
+    grid-template-columns: 1fr;
+  }
+
+  .search-controls button {
+    width: 100%;
+  }
 }
