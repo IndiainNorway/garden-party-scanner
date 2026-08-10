@@ -1,6 +1,5 @@
 const API_URL =
-  'https://script.google.com/macros/s/AKfycby79TDbtVLGWt3BnhdlEPvhBi5QWvdZ6Dh8kZuYQRfh4K1bIxlhHQAeUpAJlok6Z2zkFQ/exec';
-
+  'https://script.google.com/macros/s/AKfycby95G81Y6M5ozXYY493Z_XRtnf0YUy69zGSeUiF0uOQT5oh--bxFnYhrVoEiA53LHHl/exec';
 const operatorInput = document.getElementById('operator');
 const startButton = document.getElementById('startButton');
 const stopButton = document.getElementById('stopButton');
