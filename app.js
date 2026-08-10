@@ -485,3 +485,66 @@ function escapeHtml(value) {
     .replace(/"/g, '&quot;')
     .replace(/'/g, '&#039;');
 }
+
+
+
+// ===========================
+// DASHBOARD
+// ===========================
+
+const registeredCount =
+  document.getElementById('registeredCount');
+
+const checkedInCount =
+  document.getElementById('checkedInCount');
+
+const remainingCount =
+  document.getElementById('remainingCount');
+
+async function refreshDashboard() {
+  try {
+    const response = await fetch(
+      API_URL + '?action=dashboard',
+      {
+        cache: 'no-store'
+      }
+    );
+
+    if (!response.ok) {
+      throw new Error(
+        'Dashboard server returned HTTP ' +
+        response.status
+      );
+    }
+
+    const data = await response.json();
+
+    if (registeredCount) {
+      registeredCount.textContent =
+        data.total ?? '-';
+    }
+
+    if (checkedInCount) {
+      checkedInCount.textContent =
+        data.checkedIn ?? '-';
+    }
+
+    if (remainingCount) {
+      remainingCount.textContent =
+        data.remaining ?? '-';
+    }
+
+  } catch (error) {
+    console.error(
+      'Dashboard error:',
+      error
+    );
+  }
+}
+
+refreshDashboard();
+
+setInterval(
+  refreshDashboard,
+  10000
+);
