@@ -521,24 +521,21 @@ async function refreshDashboard() {
 
     if (registeredCount) {
       registeredCount.textContent =
-        data.total ?? '-';
+        data.total ?? '–';
     }
 
     if (checkedInCount) {
       checkedInCount.textContent =
-        data.checkedIn ?? '-';
+        data.checkedIn ?? '–';
     }
 
     if (remainingCount) {
       remainingCount.textContent =
-        data.remaining ?? '-';
+        data.remaining ?? '–';
     }
 
   } catch (error) {
-    console.error(
-      'Dashboard error:',
-      error
-    );
+    console.error('Dashboard error:', error);
   }
 }
 
