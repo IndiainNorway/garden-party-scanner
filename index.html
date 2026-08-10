@@ -2,24 +2,41 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+
   <meta
     name="viewport"
-    content="width=device-width, initial-scale=1, viewport-fit=cover"
+    content="width=device-width, initial-scale=1.0"
   >
-  <title>Event Check-in</title>
+
+  <title>Independence Day Check-in</title>
+
   <link rel="stylesheet" href="style.css">
-  <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
+
+  <script
+    src="https://unpkg.com/html5-qrcode"
+    type="text/javascript">
+  </script>
 </head>
+
 <body>
-  <main class="page">
+
+  <main class="container">
+
+    <!-- =========================
+         EVENT HEADER
+    ========================== -->
 
     <section class="card">
-      <h1>Get Together Party Check-in</h1>
+      <h1>Independence Day Check-in</h1>
+
       <p class="subtitle">
         Live QR scanning, dashboard, and attendee search.
       </p>
 
-      <label for="operator">Volunteer name</label>
+      <label for="operator">
+        Volunteer name
+      </label>
+
       <input
         id="operator"
         type="text"
@@ -28,23 +45,44 @@
       >
     </section>
 
-    <section class="dashboard" aria-label="Check-in dashboard">
+
+    <!-- =========================
+         DASHBOARD
+    ========================== -->
+
+    <section
+      class="dashboard"
+      aria-label="Check-in dashboard"
+    >
+
       <div class="metric">
         <strong id="total">–</strong>
         <span>Registered</span>
       </div>
+
       <div class="metric">
         <strong id="checked">–</strong>
         <span>Checked in</span>
       </div>
+
       <div class="metric">
         <strong id="remaining">–</strong>
         <span>Remaining</span>
       </div>
+
     </section>
 
+
+    <!-- =========================
+         QR SCANNER
+    ========================== -->
+
     <section class="card">
-      <button id="startButton" type="button">
+
+      <button
+        id="startButton"
+        type="button"
+      >
         Start live scanner
       </button>
 
@@ -55,55 +93,75 @@
       >
         Stop scanner
       </button>
-<h2>🔍 Search Attendee</h2>
 
-<div class="search-section">
-  <input
-    type="text"
-    id="searchBox"
-    placeholder="Search by name, ticket ID or email">
-
-  <button id="searchButton">
-    Search
-  </button>
-</div>
-
-<div id="searchResults"></div>
-
-<hr>
       <div id="reader"></div>
 
-      <p id="cameraMessage" class="small">
+      <p
+        id="cameraMessage"
+        class="small"
+      >
         Allow camera access when prompted.
       </p>
+
     </section>
 
-    <section id="result" class="card result hidden">
+
+    <!-- =========================
+         SCAN RESULT
+    ========================== -->
+
+    <section
+      id="result"
+      class="card result hidden"
+    >
+
       <div id="resultTitle"></div>
+
       <div id="attendeeName"></div>
+
       <div id="ticketDetails"></div>
+
     </section>
+
+
+    <!-- =========================
+         SEARCH ATTENDEE
+    ========================== -->
 
     <section class="card">
+
       <h2>Search attendee</h2>
 
       <div class="search-controls">
+
         <input
-          id="searchInput"
+          id="searchBox"
           type="search"
           placeholder="Name, ticket ID, main registrant, or email"
+          autocomplete="off"
         >
-        <button id="searchButton" type="button">
+
+        <button
+          id="searchButton"
+          type="button"
+        >
           Search
         </button>
+
       </div>
 
-      <p id="searchMessage" class="small"></p>
       <div id="searchResults"></div>
+
     </section>
 
   </main>
 
+
+  <!-- =========================
+       JAVASCRIPT
+  ========================== -->
+
   <script src="app.js"></script>
+
 </body>
 </html>
