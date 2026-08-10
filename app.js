@@ -1,5 +1,6 @@
 const API_URL =
   'https://script.google.com/macros/s/AKfycby95G81Y6M5ozXYY493Z_XRtnf0YUy69zGSeUiF0uOQT5oh--bxFnYhrVoEiA53LHHl/exec';
+
 const operatorInput = document.getElementById('operator');
 const startButton = document.getElementById('startButton');
 const stopButton = document.getElementById('stopButton');
@@ -10,12 +11,21 @@ const resultTitle = document.getElementById('resultTitle');
 const attendeeName = document.getElementById('attendeeName');
 const ticketDetails = document.getElementById('ticketDetails');
 
+const searchButton = document.getElementById('searchButton');
+const searchBox = document.getElementById('searchBox');
+const searchResults = document.getElementById('searchResults');
+
 let scanner = null;
 let scannerRunning = false;
 let scanLocked = false;
 
 let lastCode = '';
 let lastScanTime = 0;
+
+
+// ===========================
+// VOLUNTEER NAME
+// ===========================
 
 operatorInput.value =
   localStorage.getItem('gardenPartyOperator') || '';
@@ -30,6 +40,7 @@ operatorInput.addEventListener('change', () => {
 startButton.addEventListener('click', startScanner);
 stopButton.addEventListener('click', stopScanner);
 
+
 function getOperatorName() {
   const name = operatorInput.value.trim();
 
@@ -40,8 +51,14 @@ function getOperatorName() {
   }
 
   localStorage.setItem('gardenPartyOperator', name);
+
   return name;
 }
+
+
+// ===========================
+// START SCANNER
+// ===========================
 
 async function startScanner() {
   const operator = getOperatorName();
@@ -51,21 +68,29 @@ async function startScanner() {
   }
 
   startButton.disabled = true;
-  cameraMessage.textContent = 'Starting camera…';
+
+  cameraMessage.textContent =
+    'Starting camera…';
 
   scanner = new Html5Qrcode('reader');
 
   try {
-    const cameras = await Html5Qrcode.getCameras();
+    const cameras =
+      await Html5Qrcode.getCameras();
 
     if (!cameras || cameras.length === 0) {
-      throw new Error('No camera was found.');
+      throw new Error(
+        'No camera was found.'
+      );
     }
 
     const rearCamera =
       cameras.find(camera =>
-        /back|rear|environment/i.test(camera.label)
-      ) || cameras[cameras.length - 1];
+        /back|rear|environment/i.test(
+          camera.label
+        )
+      ) ||
+      cameras[cameras.length - 1];
 
     await scanner.start(
       rearCamera.id,
@@ -79,7 +104,7 @@ async function startScanner() {
       },
       onScanSuccess,
       () => {
-        // Normal frame-by-frame scan failures are ignored.
+        // Normal scan failures ignored.
       }
     );
 
@@ -106,6 +131,11 @@ async function startScanner() {
       'Camera could not be started.';
   }
 }
+
+
+// ===========================
+// STOP SCANNER
+// ===========================
 
 async function stopScanner() {
   if (!scanner || !scannerRunning) {
@@ -134,8 +164,15 @@ async function stopScanner() {
     'Scanner stopped. Tap Start live scanner to begin again.';
 }
 
+
+// ===========================
+// QR SCAN SUCCESS
+// ===========================
+
 async function onScanSuccess(decodedText) {
-  const ticketId = String(decodedText || '').trim();
+  const ticketId =
+    String(decodedText || '').trim();
+
   const now = Date.now();
 
   if (!ticketId || scanLocked) {
@@ -153,7 +190,8 @@ async function onScanSuccess(decodedText) {
   lastScanTime = now;
   scanLocked = true;
 
-  cameraMessage.textContent = 'Checking ticket…';
+  cameraMessage.textContent =
+    'Checking ticket…';
 
   const operator = getOperatorName();
 
@@ -163,27 +201,36 @@ async function onScanSuccess(decodedText) {
   }
 
   try {
-    const params = new URLSearchParams({
-      ticket: ticketId,
-      operator: operator
-    });
+    const params =
+      new URLSearchParams({
+        ticket: ticketId,
+        operator: operator
+      });
 
     const requestUrl =
-      API_URL + '?' + params.toString();
+      API_URL +
+      '?' +
+      params.toString();
 
-    const response = await fetch(requestUrl, {
-      method: 'GET',
-      redirect: 'follow',
-      cache: 'no-store'
-    });
+    const response =
+      await fetch(
+        requestUrl,
+        {
+          method: 'GET',
+          redirect: 'follow',
+          cache: 'no-store'
+        }
+      );
 
     if (!response.ok) {
       throw new Error(
-        'Server returned HTTP ' + response.status
+        'Server returned HTTP ' +
+        response.status
       );
     }
 
-    const data = await response.json();
+    const data =
+      await response.json();
 
     renderResult(data);
 
@@ -192,6 +239,7 @@ async function onScanSuccess(decodedText) {
       error.message ||
       'The ticket could not be checked.'
     );
+
   } finally {
     cameraMessage.textContent =
       'Scanner is active. Hold the next QR code inside the frame.';
@@ -201,6 +249,11 @@ async function onScanSuccess(decodedText) {
     }, 1800);
   }
 }
+
+
+// ===========================
+// DISPLAY SCAN RESULT
+// ===========================
 
 function renderResult(data) {
   resultBox.classList.remove(
@@ -213,47 +266,73 @@ function renderResult(data) {
   if (data.status === 'success') {
     resultBox.classList.add('success');
 
-    resultTitle.textContent = 'CHECK-IN SUCCESSFUL';
+    resultTitle.textContent =
+      'CHECK-IN SUCCESSFUL';
+
     attendeeName.textContent =
       data.attendeeName || '';
 
     ticketDetails.innerHTML =
-      escapeHtml(data.ticketId || '') +
+      escapeHtml(
+        data.ticketId || ''
+      ) +
       '<br>' +
-      escapeHtml(data.checkInTime || '');
+      escapeHtml(
+        data.checkInTime || ''
+      );
 
     vibrate([150]);
+
     return;
   }
 
   if (data.status === 'duplicate') {
-    resultBox.classList.add('duplicate');
+    resultBox.classList.add(
+      'duplicate'
+    );
 
-    resultTitle.textContent = 'ALREADY CHECKED IN';
+    resultTitle.textContent =
+      'ALREADY CHECKED IN';
+
     attendeeName.textContent =
       data.attendeeName || '';
 
     ticketDetails.innerHTML =
-      escapeHtml(data.ticketId || '') +
+      escapeHtml(
+        data.ticketId || ''
+      ) +
       '<br>First check-in: ' +
-      escapeHtml(data.checkInTime || '') +
+      escapeHtml(
+        data.checkInTime || ''
+      ) +
       '<br>Checked in by: ' +
-      escapeHtml(data.checkedInBy || '');
+      escapeHtml(
+        data.checkedInBy || ''
+      );
 
-    vibrate([150, 100, 150]);
+    vibrate(
+      [150, 100, 150]
+    );
+
     return;
   }
 
   resultBox.classList.add('error');
 
-  resultTitle.textContent = 'CHECK-IN FAILED';
+  resultTitle.textContent =
+    'CHECK-IN FAILED';
+
   attendeeName.textContent = '';
 
   ticketDetails.textContent =
-    data.message || 'Invalid ticket.';
+    data.message ||
+    'Invalid ticket.';
 
-  vibrate([300, 100, 300]);
+  vibrate(
+    [300, 100, 300]
+  );
 }
+
 
 function showError(message) {
   resultBox.classList.remove(
@@ -262,18 +341,141 @@ function showError(message) {
     'duplicate'
   );
 
-  resultBox.classList.add('error');
+  resultBox.classList.add(
+    'error'
+  );
 
-  resultTitle.textContent = 'CHECK-IN FAILED';
+  resultTitle.textContent =
+    'CHECK-IN FAILED';
+
   attendeeName.textContent = '';
-  ticketDetails.textContent = message;
+
+  ticketDetails.textContent =
+    message;
 }
+
 
 function vibrate(pattern) {
   if (navigator.vibrate) {
     navigator.vibrate(pattern);
   }
 }
+
+
+// ===========================
+// SEARCH ATTENDEE
+// ===========================
+
+if (searchButton) {
+  searchButton.addEventListener(
+    'click',
+    searchAttendee
+  );
+}
+
+if (searchBox) {
+  searchBox.addEventListener(
+    'keypress',
+    function (e) {
+      if (e.key === 'Enter') {
+        searchAttendee();
+      }
+    }
+  );
+}
+
+
+async function searchAttendee() {
+  const query =
+    searchBox.value.trim();
+
+  if (!query) {
+    return;
+  }
+
+  searchResults.innerHTML =
+    'Searching...';
+
+  try {
+    const response =
+      await fetch(
+        API_URL +
+        '?action=search&query=' +
+        encodeURIComponent(query),
+        {
+          cache: 'no-store'
+        }
+      );
+
+    if (!response.ok) {
+      throw new Error(
+        'Search server returned HTTP ' +
+        response.status
+      );
+    }
+
+    const data =
+      await response.json();
+
+    if (
+      !data.results ||
+      data.results.length === 0
+    ) {
+      searchResults.innerHTML =
+        '<p>No attendee found.</p>';
+
+      return;
+    }
+
+    let html = '';
+
+    data.results.forEach(person => {
+      html +=
+        '<div class="search-card">' +
+
+        '<strong>' +
+        escapeHtml(
+          person.attendeeName || ''
+        ) +
+        '</strong><br>' +
+
+        'Ticket: ' +
+        escapeHtml(
+          person.ticketId || ''
+        ) +
+        '<br>' +
+
+        'Main Registrant: ' +
+        escapeHtml(
+          person.mainRegistrant || ''
+        ) +
+        '<br>' +
+
+        'Status: ' +
+        (
+          person.checkedIn
+            ? '✅ Checked In'
+            : '❌ Not Checked In'
+        ) +
+
+        '</div><br>';
+    });
+
+    searchResults.innerHTML =
+      html;
+
+  } catch (error) {
+    console.error(error);
+
+    searchResults.innerHTML =
+      '<p>Unable to search attendee.</p>';
+  }
+}
+
+
+// ===========================
+// HTML SAFETY
+// ===========================
 
 function escapeHtml(value) {
   return String(value || '')
@@ -282,91 +484,4 @@ function escapeHtml(value) {
     .replace(/>/g, '&gt;')
     .replace(/"/g, '&quot;')
     .replace(/'/g, '&#039;');
-}
-// ===========================
-// SEARCH ATTENDEE
-// ===========================
-
-const searchButton = document.getElementById('searchButton');
-const searchBox = document.getElementById('searchBox');
-const searchResults = document.getElementById('searchResults');
-
-if (searchButton) {
-  searchButton.addEventListener('click', searchAttendee);
-}
-
-if (searchBox) {
-  searchBox.addEventListener('keypress', function (e) {
-    if (e.key === 'Enter') {
-      searchAttendee();
-    }
-  });
-}
-
-async function searchAttendee() {
-
-  const query = searchBox.value.trim();
-
-  if (!query) {
-    return;
-  }
-
-  searchResults.innerHTML = "Searching...";
-
-  try {
-
-    const response = await fetch(
-      API_URL +
-      "?action=search&query=" +
-      encodeURIComponent(query),
-      {
-        cache: "no-store"
-      }
-    );
-
-    const data = await response.json();
-
-    if (!data.results || data.results.length === 0) {
-
-      searchResults.innerHTML =
-        "<p>No attendee found.</p>";
-
-      return;
-    }
-
-    let html = "";
-
-    data.results.forEach(person => {
-
-      html += `
-      <div class="search-card">
-
-        <strong>${person.attendeeName}</strong><br>
-
-        Ticket :
-        ${person.ticketId}<br>
-
-        Main Registrant :
-        ${person.mainRegistrant}<br>
-
-        Status :
-        ${person.checkedIn ? "✅ Checked In" : "❌ Not Checked In"}
-
-      </div>
-      <br>
-      `;
-
-    });
-
-    searchResults.innerHTML = html;
-
-  }
-
-  catch(error){
-
-    searchResults.innerHTML =
-      "Unable to search.";
-
-  }
-
 }
