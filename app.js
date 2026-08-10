@@ -493,13 +493,13 @@ function escapeHtml(value) {
 // ===========================
 
 const registeredCount =
-  document.getElementById('registeredCount');
+  document.getElementById('total');
 
 const checkedInCount =
-  document.getElementById('checkedInCount');
+  document.getElementById('checked');
 
 const remainingCount =
-  document.getElementById('remainingCount');
+  document.getElementById('remaining');
 
 async function refreshDashboard() {
   try {
