@@ -15,6 +15,10 @@ const searchButton = document.getElementById('searchButton');
 const searchBox = document.getElementById('searchBox');
 const searchResults = document.getElementById('searchResults');
 
+const registeredCount = document.getElementById('total');
+const checkedInCount = document.getElementById('checked');
+const remainingCount = document.getElementById('remaining');
+
 let scanner = null;
 let scannerRunning = false;
 let scanLocked = false;
@@ -39,7 +43,6 @@ operatorInput.addEventListener('change', () => {
 
 startButton.addEventListener('click', startScanner);
 stopButton.addEventListener('click', stopScanner);
-
 
 function getOperatorName() {
   const name = operatorInput.value.trim();
@@ -234,6 +237,8 @@ async function onScanSuccess(decodedText) {
 
     renderResult(data);
 
+    refreshDashboard();
+
   } catch (error) {
     showError(
       error.message ||
@@ -334,6 +339,10 @@ function renderResult(data) {
 }
 
 
+// ===========================
+// ERROR DISPLAY
+// ===========================
+
 function showError(message) {
   resultBox.classList.remove(
     'hidden',
@@ -354,6 +363,10 @@ function showError(message) {
     message;
 }
 
+
+// ===========================
+// VIBRATION
+// ===========================
 
 function vibrate(pattern) {
   if (navigator.vibrate) {
@@ -383,7 +396,6 @@ if (searchBox) {
     }
   );
 }
-
 
 async function searchAttendee() {
   const query =
@@ -474,32 +486,8 @@ async function searchAttendee() {
 
 
 // ===========================
-// HTML SAFETY
-// ===========================
-
-function escapeHtml(value) {
-  return String(value || '')
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;')
-    .replace(/'/g, '&#039;');
-}
-
-
-
-// ===========================
 // DASHBOARD
 // ===========================
-
-const registeredCount =
-  document.getElementById('total');
-
-const checkedInCount =
-  document.getElementById('checked');
-
-const remainingCount =
-  document.getElementById('remaining');
 
 async function refreshDashboard() {
   try {
@@ -517,7 +505,8 @@ async function refreshDashboard() {
       );
     }
 
-    const data = await response.json();
+    const data =
+      await response.json();
 
     if (registeredCount) {
       registeredCount.textContent =
@@ -535,7 +524,10 @@ async function refreshDashboard() {
     }
 
   } catch (error) {
-    console.error('Dashboard error:', error);
+    console.error(
+      'Dashboard error:',
+      error
+    );
   }
 }
 
@@ -545,3 +537,17 @@ setInterval(
   refreshDashboard,
   10000
 );
+
+
+// ===========================
+// HTML SAFETY
+// ===========================
+
+function escapeHtml(value) {
+  return String(value || '')
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#039;');
+}
